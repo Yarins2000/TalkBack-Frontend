@@ -1,0 +1,35 @@
+#chat .form-control {
+    border-color: transparent;
+}
+
+#chat .form-control:focus {
+    border-color: transparent;
+    box-shadow: inset 0px 0px 0px 1px transparent;
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+@media (max-width: 576px) {
+    #chat .card-body {
+      height: 70%;
+    }
+  }
+  
+  @media (min-width: 577px) and (max-width: 992px) {
+    #chat .card-body {
+      height: 80%;
+    }
+  }
+  
+  @media (min-width: 993px) {
+    #chat .card-body {
+      height: 90%;
+    }
+  }
+  

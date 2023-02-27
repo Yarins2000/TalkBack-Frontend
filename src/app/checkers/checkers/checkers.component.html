@@ -1,0 +1,9 @@
+<div class="board-container" [ngClass]="{'not-allowed' : !isTurn}">
+    <div class="row" *ngFor="let row of board; let i = index;">
+        <div class="cell" *ngFor="let cell of row; let j = index;"
+            [ngClass]="{'dark-cell': (i + j) % 2 === 1, 'light-cell': (i + j) % 2 === 0}" (click)="onSquareClick(i, j)">
+            <app-piece *ngIf="shouldShowPiece(i, j)" [color]="board[i][j]" (click)="onPieceClick(i, j)" 
+            [ngClass]="(isKing(i, j) + ' ' + (!preventFromMovingOpponentPieces(i, j) ? 'not-allowed' : ''))"></app-piece>
+        </div>
+    </div>
+</div>

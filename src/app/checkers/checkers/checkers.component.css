@@ -1,0 +1,51 @@
+.board-container {
+    width: 800px;
+    height: 800px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    border: 1.5px solid #333;
+    position: relative;
+}
+
+.cell:hover {
+    opacity: 0.8;
+}
+
+.dark-cell {
+    background-color: #b58863;
+}
+
+.light-cell {
+    background-color: #f0d9b5;
+}
+
+.not-allowed {
+    pointer-events: none;
+}
+
+.king::before {
+    content: "\2655";
+    color: #fff;
+    font-size: 32px;
+    position: absolute;
+    background-size: cover;
+    margin-top: 24px;
+    margin-left: 24px;
+    cursor: pointer;
+}
+
+.whitePiece::before{
+    color: #333;
+}

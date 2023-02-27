@@ -1,0 +1,105 @@
+<section style="background-color: #fff;">
+    <div class="container py-5">
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+
+                <div class="card" id="chat">
+                    <div class="card-header d-flex justify-content-between align-items-center p-3">
+                        <h5 class="mb-0">Chat</h5>
+                    </div>
+                    <div class="card-body overflow-auto" style="position: relative; height: 600px">
+
+                        <!-- <div class="d-flex flex-row justify-content-start">
+                            <div>
+                                <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">Hi</p>
+                                <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">How are you
+                                    ...???
+                                </p>
+                                <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">What are you
+                                    doing
+                                    tomorrow? Can we come up a bar?</p>
+                                <p class="small ms-3 mb-3 rounded-3 text-muted">23:58</p>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="divider d-flex align-items-center mb-4">
+                            <p class="text-center mx-3 mb-0" style="color: #a2aab7;">Today</p>
+                        </div> -->
+
+                        <!-- <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                            <div>
+                                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">Hiii, I'm good.</p>
+                                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">How are you doing?</p>
+                                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">Long time no see!
+                                    Tomorrow
+                                    office. will
+                                    be free on sunday.</p>
+                                <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">00:06</p>
+                            </div>
+                        </div> -->
+
+                        <div *ngFor="let message of messages">
+                            <div
+                                [ngClass]="isMessageSentByCurrentUser(message) ? 'd-flex flex-row justify-content-end mb-4 pt-1' : 'd-flex flex-row justify-content-start' ">
+                                <div>
+                                    <p *ngIf="isMessageSentByCurrentUser(message); else otherUser" class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
+                                        {{message.message}}
+                                    </p>
+                                    <ng-template #otherUser>
+                                        <p class="d-flex flex-row justify-content-start bg-light">{{message.message}}</p>
+                                    </ng-template>
+
+                                    <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">
+                                        {{message.sendingTime | date: 'HH:mm'}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                        <input type="text" class="form-control form-control-lg" placeholder="Type message"
+                            [(ngModel)]="messageInput" (keydown.enter)="sendMessage()">
+                        <a class="ms-3 text-muted pointer" (click)="sendMessage()"><i class="fas fa-paper-plane"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trigger button for the modal -->
+<!-- <button class="btn btn-primary" (click)="open(content)">Play Game</button> -->
+<button class="btn btn-primary" (click)="sendGameRequest()">Play Game</button>
+
+<!-- Modal code -->
+<ng-template #invitationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Invitation to play Checkers</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Do you want to play Checkers with {{ chatParticipants.recipient.username }}?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="declineGameRequest()">No</button>
+    <button type="button" class="btn btn-primary" (click)="acceptGameRequest(modal)">Yes</button>
+  </div>
+</ng-template>
+
+
+<ng-template #waitingModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Waiting for response</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Waiting for {{ chatParticipants.recipient.username }} to accept the invitation...
+    </div>
+</ng-template>

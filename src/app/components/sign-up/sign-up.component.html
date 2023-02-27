@@ -1,0 +1,68 @@
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+
+                <form #signupForm="ngForm" (ngSubmit)="signupForm.valid && !isPasswordNotMatch && submitSignUp()">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <div class="mb-md-5 mt-md-4 pb-5">
+                                <h2 class="fw-bold pb-3">Sign Up</h2>
+                                <div class="form-outline form-white mb-4">
+                                    <input type="text" name="username" id="username"
+                                        class="form-control form-control-lg" [(ngModel)]="registerForm.username"
+                                        #usernameInput="ngModel" required />
+                                    <label class="form-label" for="username">Username</label>
+                                    <div *ngIf="usernameInput.touched && !usernameInput.valid" class="text-danger">
+                                        <div *ngIf="usernameInput.errors?.['required']">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-outline form-white mb-4">
+                                    <input type="password" name="password" id="password"
+                                        class="form-control form-control-lg" [(ngModel)]="registerForm.password"
+                                        #passwordInput="ngModel" required [pattern]="regExPattern" />
+                                    <label class="form-label" for="password">Password</label>
+                                    <div *ngIf="passwordInput.touched && !passwordInput.valid" class="text-danger">
+                                        <div *ngIf="passwordInput.errors?.['required']">
+                                            This field is required.
+                                        </div>
+                                        <div *ngIf="passwordInput.errors?.['pattern']">
+                                            Password must be at least 6 characters, with at least - 1 uppercase
+                                            letter, 1 digit and 1 non alphanumeric character.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-outline form-white mb-4">
+                                    <input type="password" name="confirmPassword" id="confirmPassword"
+                                        class="form-control form-control-lg" [(ngModel)]="registerForm.confirmPassword"
+                                        #confirmPasswordInput="ngModel" (ngModelChange)="matchPassword()" required />
+                                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                                    <div *ngIf="isPasswordNotMatch" class="text-danger">
+                                        Passwords do not match
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div *ngIf="showErrorMessage[0]" class="text-danger">
+                                        {{ showErrorMessage[1] }}
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+                            </div>
+                            <div>
+                                <p class="mb-0">Already have an account?
+                                    <a routerLink="/signin" class="text-black-50 fw-bold">Sign in</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>

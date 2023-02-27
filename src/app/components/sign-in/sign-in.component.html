@@ -1,0 +1,66 @@
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+
+                <form #signinForm="ngForm" (ngSubmit)="signinForm.valid && submitLogin()">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <div class="mb-md-5 mt-md-4 pb-5">
+                                <h2 class="fw-bold pb-3">Login</h2>
+                                <div class="form-outline form-white mb-4">
+                                    <input type="text" name="username" id="username"
+                                        class="form-control form-control-lg" [(ngModel)]="loginForm.username"
+                                        #usernameInput="ngModel" required />
+                                    <label class="form-label" for="username">Username</label>
+                                    <div *ngIf="usernameInput.touched && !usernameInput.valid" class="text-danger">
+                                        <div *ngIf="usernameInput.errors?.['required']">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-outline form-white mb-2">
+                                    <input type="password" name="password" id="password"
+                                        class="form-control form-control-lg" [(ngModel)]="loginForm.password"
+                                        #passwordInput="ngModel" required />
+                                    <label class="form-label" for="password">Password</label>
+                                    <div *ngIf="passwordInput.touched && !passwordInput.valid" class="text-danger">
+                                        <div *ngIf="passwordInput.errors?.['required']">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input me-0" name="rememberMe" type="checkbox"
+                                            id="rememberMe" [(ngModel)]="loginForm.rememberMe" />
+                                        <label class="form-check-label" for="rememberMe">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <div *ngIf="showErrorMessage[0]" class="text-danger">
+                                        {{ showErrorMessage[1] }}
+                                    </div>
+                                </div>
+
+                                <p class="small mb-3 mt-4 pb-lg-2"><a class="text-black-100">Forgot password?</a></p>
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                            </div>
+                            <div>
+                                <p class="mb-0">Don't have an account?
+                                    <a routerLink="/signup" class="text-black-50 fw-bold">Sign Up</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
