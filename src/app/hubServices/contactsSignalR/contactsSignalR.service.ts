@@ -3,7 +3,6 @@ import * as SignalR from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { User } from '../../models/user.model';
-import { ContactsService } from '../../services/contacts/contacts.service';
 import { AppState } from '../../state/app.state';
 import * as UsersActions from '../../state/users.actions';
 import * as UsersSelectors from '../../state/users.selectors';
@@ -16,7 +15,7 @@ export class ContactsSignalRService {
   users: User[] = [];
   loggedInUsers: User[] = [];
 
-  constructor(private contactsService: ContactsService, private store: Store<AppState>) { 
+  constructor(private store: Store<AppState>) { 
     if(!this.hubConnection){
       this.startConnection();
     }
