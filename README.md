@@ -22,5 +22,30 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-# TalkBack-Frontend
-The frontend of the TalkBack project. Using Angular 15 and Bottstrap 5
+# Angular Checkers Game
+This is the frontend part of a project that includes authentication, chat and checkers game. The frontend is built using Angular 15.
+
+## Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+You will need to have Node.js and npm installed on your machine.
+
+### Installing
+Clone the repository to your local machine: `git clone https://github.com/Yarins2000/TalkBack-Frontend.git`
+
+Go to the project's root directory and run:
+
+`npm install`
+This will install all the necessary dependencies.
+
+### Running the app
+To run the app in the development mode, use the following command:
+
+`ng serve`
+The app will run on http://localhost:4200/. The page will reload if you make edits. You will also see any lint errors in the console.
+
+### Built With
+* Angular - The frontend framework used
+* Ng-Bootstrap - UI Library for Angular
+* Font Awesome - Icons library
