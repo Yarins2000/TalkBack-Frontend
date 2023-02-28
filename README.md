@@ -1,4 +1,4 @@
-# TalkBackUI
+<!-- # TalkBackUI
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
 
@@ -21,6 +21,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+-->
 
 # Angular Checkers Game
 This is the frontend part of a project that includes authentication, chat and checkers game. The frontend is built using Angular 15.
