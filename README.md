@@ -22,6 +22,5 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-=======
 # TalkBack-Frontend
 The frontend of the TalkBack project. Using Angular 15 and Bottstrap 5
