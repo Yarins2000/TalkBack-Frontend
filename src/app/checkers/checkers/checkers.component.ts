@@ -53,6 +53,9 @@ export class CheckersComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Initializes the board and the pieces arrays.
+   */
   initializeBoard() {
     for (let i = 0; i < 8; i++) {
       this.board[i] = [];
@@ -98,6 +101,9 @@ export class CheckersComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Listens to signalr 'on' methods.
+   */
   listeningOnHubMethods() {
     this.gameHubService.onStartGame(() => {
       console.log("starting a game in " + this.gameGroupName + " group name");
@@ -121,6 +127,12 @@ export class CheckersComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Checks for a piece (given its row and column) wether it becomes a king or not.
+   * @param row the piece's row position.
+   * @param column the piece's column position.
+   * @returns a string represents the piece's class - if it should be a king or not.
+   */
   isKing(row: number, column: number): string {
     let piece: Piece;
     if (this.board[row][column] === CheckerState.White)
@@ -137,11 +149,23 @@ export class CheckersComponent implements OnInit, OnDestroy {
     return "";
   }
 
+  /**
+   * Checks if the current player is allowed to move the white / black pieces and prevent from him to move the opponent's pieces .
+   * @param row the current piece row
+   * @param column the current piece column
+   * @returns true if the player is allowed to move the pieces, otherwise false.
+   */
   preventFromMovingOpponentPieces(row: number, column: number) {
     return (this.isPlayerPlayWhite && this.board[row][column] === CheckerState.White) ||
       (!this.isPlayerPlayWhite && this.board[row][column] === CheckerState.Black);
   }
 
+  /**
+   * Checks wether the current piece should be shown or not.
+   * @param row the piece row
+   * @param column the piece column
+   * @returns true if the piece should be shown, false otherwise.
+   */
   shouldShowPiece(row: number, column: number): boolean {
     const currentColor = this.board[row][column];
     if (currentColor === CheckerState.Empty) {
@@ -159,10 +183,16 @@ export class CheckersComponent implements OnInit, OnDestroy {
       return false;
   }
 
-  isSquareEnabled(row: number, column: number) {
+  
+  /*isSquareEnabled(row: number, column: number) {
     return (row + column) % 2 === 1;
-  }
+  }*/
 
+  /**
+   * Checks if the square at position [toRo, toColumn] is empty and can be moved to. If so, invokes the makeMove hub's method.
+   * @param toRow the square's row to check
+   * @param toColumn the square's column to check
+   */
   onSquareClick(toRow: number, toColumn: number) {
     if (this.selectedPiece) {
       if (this.board[toRow][toColumn] === CheckerState.Empty)
@@ -170,6 +200,11 @@ export class CheckersComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Gets the piece of the received row and column
+   * @param row the received row
+   * @param column the received column
+   */
   onPieceClick(row: number, column: number) {
     if (this.board[row][column] === CheckerState.White)
       this.selectedPiece = this.getPiece(this.senderPieces, row, column);
@@ -177,6 +212,13 @@ export class CheckersComponent implements OnInit, OnDestroy {
       this.selectedPiece = this.getPiece(this.recipientPieces, row, column);
   }
 
+  /**
+   * Makes a move (a single step or a capture), updates the board and pieces respectively and switches the turns.
+   * @param fromRow the piece's starting row
+   * @param fromColumn the piece's starting column
+   * @param toRow the piece's ending row
+   * @param toColumn the piece's ending column
+   */
   makeMove(fromRow: number, fromColumn: number, toRow: number, toColumn: number) {
     if (this.selectedPiece) {
       let currentPieceColor = this.selectedPiece.color;
@@ -203,6 +245,13 @@ export class CheckersComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Moves the selected piece and checks if it becomes a king.
+   * @param fromRow the piece's startting row
+   * @param fromColumn the piece's starting column
+   * @param toRow the piece's ending row
+   * @param toColumn the piece's ending column
+   */
   moveSelectedPiece(fromRow: number, fromColumn: number, toRow: number, toColumn: number) {
     this.board[toRow][toColumn] = this.board[fromRow][fromColumn];
     this.board[fromRow][fromColumn] = CheckerState.Empty;
@@ -217,22 +266,38 @@ export class CheckersComponent implements OnInit, OnDestroy {
     this.selectedPiece = null;
   }
 
+  /**
+   * Gets a specific piece from the received piece array.
+   * @param pieces the received piece array
+   * @param row the piece's row
+   * @param column the piece's column
+   * @returns the obtained piece from the array
+   */
   getPiece(pieces: Piece[], row: number, column: number) {
     return pieces.find(p => p.position[0] === row && p.position[1] == column)!;
   }
 
+  /**
+   * Gets the move length
+   * @param fromRow starting row 
+   * @param toRow ending row
+   * @returns the length of the step
+   */
   getMoveDifference(fromRow: number, toRow: number) {
     return Math.abs(fromRow - toRow);
   }
 
+  /**
+   * Switches the turns.
+   */
   switchTurn() {
-    // this.isCurrentPlayer = !this.isCurrentPlayer;
-    if (this.isTurn === true)
-      this.isTurn = false;
-    else
-      this.isTurn = true;
+    this.isTurn = !this.isTurn;
   }
 
+  /**
+   * Checks if the game is over by checking the piece's arrays length.
+   * @returns true if the game is over, false otherwise.
+   */
   isGameOver() {
     return this.senderPieces.length === 0 || this.recipientPieces.length === 0;
   }

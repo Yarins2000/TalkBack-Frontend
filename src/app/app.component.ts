@@ -9,10 +9,15 @@ import { ContactsSignalRService } from './hubServices/contactsSignalR/contactsSi
 export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private contactsSignalRService: ContactsSignalRService) { }
-  
+
   ngOnInit(): void {
-    // this.contactsSignalRService.startConnection();
+    window.addEventListener("keyup", this.disableF5);
+    window.addEventListener("keydown", this.disableF5);
   }
+
+  disableF5(e: KeyboardEvent) {
+    if ((e.key) === "F5") e.preventDefault();
+  };
 
   ngOnDestroy(): void {
     this.contactsSignalRService.stopConnection();

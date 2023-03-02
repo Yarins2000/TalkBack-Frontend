@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { TokenService } from '../services/token/token.service';
 
+/**
+ * An authentication guard, depending on jwt token.
+ */
 @Injectable({
   providedIn: 'root'
 })

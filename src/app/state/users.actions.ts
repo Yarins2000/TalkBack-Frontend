@@ -1,10 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { User } from "../models/user.model";
 
-// export const loadUsers = createAction(
-//     '[Users API] Load Users',
-//     props<{ users: User[] }>()
-// );
 export const loadUsers = createAction(
     '[Users] Load Users'
 );

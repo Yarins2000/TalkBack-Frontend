@@ -21,8 +21,10 @@ export class ContactsSignalRService {
     }
   }
 
+  /**
+   * Start the hub connection and registers the hub methods
+   */
   startConnection() {
-    //builds the hubConnection
     this.hubConnection = new SignalR.HubConnectionBuilder()
       .withUrl(environment.serverApi + environment.contactsHubUrl, {
         skipNegotiation: true,
@@ -48,19 +50,25 @@ export class ContactsSignalRService {
     this.newLogoutListener();
   }
 
-  stopConnection() {
-    if(this.hubConnection.state !== SignalR.HubConnectionState.Disconnected)
-      this.hubConnection.stop().then(_ => console.log('contacts connection has stopped'));
-  }
-
+  /**
+   * Invokes a method when a user is logged in
+   * @param username the user's username who is logged in
+   */
   newLogin(username: string) {
     this.hubConnection.invoke('UserLoggedIn', username);
   }
-
+  
+  /**
+   * Invokes a method when a user is logged out
+   * @param username the user's username who is logged out
+   */
   newLogout(username: string) {
     this.hubConnection.invoke('UserLoggedOut', username);
   }
-
+  
+  /**
+   * Registers a method to be called when a user is logged in
+   */
   newLoginListener() {
     this.hubConnection.on('newLogin', (username: string) => {
       let loggedInUser!: User;
@@ -69,7 +77,10 @@ export class ContactsSignalRService {
       this.store.dispatch(UsersActions.userLogin({loggedInUser}));
     });
   }
-
+  
+  /**
+   * Registers a method to be called when the user is logged out
+   */
   newLogoutListener() {
     this.hubConnection.on('newLogout', (username: string) => {
       let loggedOutUser!: User;
@@ -77,5 +88,13 @@ export class ContactsSignalRService {
       this.store.dispatch(UsersActions.chnageConnectionStatus({user: loggedOutUser}));
       this.store.dispatch(UsersActions.userLogout({loggedOutUser}));
     });
+  }
+
+  /**
+   * Stops the hub connection
+   */
+  stopConnection() {
+    if(this.hubConnection.state !== SignalR.HubConnectionState.Disconnected)
+      this.hubConnection.stop().then(_ => console.log('contacts connection has stopped'));
   }
 }

@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Register } from '../../models/register.model';
+import { RegisterRequest } from '../../models/register-request.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Login } from 'src/app/models/login.model';
+import { LoginRequest } from 'src/app/models/login-request.model';
 import { TokenService } from '../token/token.service';
 
 @Injectable({
@@ -18,25 +18,34 @@ export class AccountService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  Login(login: Login): Observable<any> {
-    return this.http.post(this.accountUrl + "login", login);
-  }
-
-  login(login: Login): Observable<{result: any, user: any, token: string}>{
-    return this.http.post<{result: any, user: any, token: string}>(this.accountUrl + "login", login).pipe(map((response) => {
-      const decodedToken = this.helper.decodeToken(response.token); // maybe delete
-      this.tokenService.setToken("token", response.token);
+  /**
+   * Sends a POST request to the server to login a user with the provided credentials.
+   * @param login - An object containing the user's login credentials.
+   * @returns An observable that emits the user object and token returned by the server upon successful login.
+   */
+  login(login: LoginRequest): Observable<{result: any, user: any, token: string}>{
+    return this.http.post<{result: any, user: any, token: string}>(this.accountUrl + "login", login).pipe(map(response => {
+      this.tokenService.setNewItemInSessionStorage("token", response.token);
       return response.user;
     }));
   }
 
-  register(register: Register): Observable<any> {
-    return this.http.post(this.accountUrl + "register", register);
+  /**
+   * Sends a POST request to the server to register a user with the provided credentials.
+   * @param register An object containing the user's register credentials
+   * @returns An observable that emits the answer from the server, if the registration was successful.
+   */
+  register(register: RegisterRequest): Observable<boolean | undefined> {
+    return this.http.post<boolean | undefined>(this.accountUrl + "register", register);
   }
 
-  logout(){
+  /**
+   * Sends a POST request to the server to logout the current user.
+   * @returns an Observable that emits void.
+   */
+  logout(): Observable<void>{
     let username = this.tokenService.getUsernameFromToken("token");
-    this.tokenService.removeToken("token");
+    this.tokenService.removeItemFromSessionStorage("token");
     return this.http.post<void>(this.accountUrl + "logout", {username});
   }
 }

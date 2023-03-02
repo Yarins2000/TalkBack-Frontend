@@ -1,8 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Login } from 'src/app/models/login.model';
-import { Register } from 'src/app/models/register.model';
+import { RegisterRequest } from 'src/app/models/register-request.model';
 import { AccountService } from 'src/app/services/account/account.service';
 
 @Component({
@@ -12,7 +10,7 @@ import { AccountService } from 'src/app/services/account/account.service';
 })
 export class SignUpComponent {
   regExPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
-  registerForm = new Register('', '', '');
+  registerForm = new RegisterRequest('', '', '');
   isPasswordNotMatch = false;
   showErrorMessage: [boolean, string] = [false, ''];
 
@@ -22,6 +20,9 @@ export class SignUpComponent {
     this.isPasswordNotMatch = this.registerForm.password !== this.registerForm.confirmPassword;
   }
 
+  /**
+   * Submits the form. if the registration was successful, navigates to {@link SignInComponent}
+   */
   submitSignUp() {
     this.showErrorMessage = [false, ''];
     this.accountService.register(this.registerForm).subscribe({

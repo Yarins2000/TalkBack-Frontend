@@ -8,7 +8,7 @@ import { User } from '../../models/user.model';
   providedIn: 'root'
 })
 export class ContactsService {
-  contactsUrl = environment.serverApi + environment.account;
+  private contactsUrl = environment.serverApi + environment.account;
   usersSubject = new Subject<any[]>();
 
   constructor(private http: HttpClient) { }
@@ -17,15 +17,21 @@ export class ContactsService {
     return this.http.get<any[]>(this.contactsUrl + 'users');
   }
 
-  mapUser(identityUser: any) {
+  /**
+   * Maps a received user from the server to a {@link User} object.
+   * @param identityUser the user received from the server
+   * @returns new User object.
+   */
+  private mapUser(identityUser: any) {
     return new User(identityUser.id, identityUser.userName, identityUser.isConnected);
   }
 
-  mapUsers(identityUser: any[]): User[]{
-    return identityUser.map(user => this.mapUser(user));
-  }
-
-  findUser(username: string, userList: User[]) {
-    return userList.find(user => user.username === username);
+  /**
+   * Maps all the users from the received identityUser list from the server.
+   * @param identityUsers the users list received from the server
+   * @returns a new User object array.
+   */
+  mapUsers(identityUsers: any[]): User[]{
+    return identityUsers.map(user => this.mapUser(user));
   }
 }

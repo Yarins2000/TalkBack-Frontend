@@ -4,12 +4,15 @@ import { switchMap, map, catchError } from 'rxjs/operators';
 import * as UsersActions from './users.actions';
 import { of } from 'rxjs';
 import { ContactsService } from '../services/contacts/contacts.service';
-import { ContactsSignalRService } from '../hubServices/contactsSignalR/contactsSignalR.service';
 
 @Injectable()
 export class UsersEffects {
-    constructor(private actions$: Actions, private contactsService: ContactsService, private contactsSignalRService: ContactsSignalRService) { }
+    constructor(private actions$: Actions, private contactsService: ContactsService) { }
 
+    /**
+     * An effect that loads the users from the contacts service and dispatches the corresponding success/failure actions.
+     * @returns An Observable of the success/failure actions.
+     */
     loadUsers$ = createEffect(() =>
         this.actions$.pipe(
             ofType(UsersActions.loadUsers),
@@ -22,12 +25,4 @@ export class UsersEffects {
             )
         )
     );
-
-    // userLoggedIn$ = createEffect(() => this.actions$.pipe(
-    //     ofType(UsersActions.userLogin),
-    //     switchMap(({ loggedInUser }) => {
-    //         this.contactsSignalRService.newLogin(loggedInUser.username);
-    //         return of(UsersActions.userLoginFinished({ loggedInUser }))
-    //     })
-    // ));
 }

@@ -22,10 +22,22 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private subscription!: Subscription;
 
+  /**
+   * The current chat participents.
+   */
   chatParticipants!: ChatParticipants;
 
+  /**
+   * The modal template handling the invitation message content and buttons.
+   */
   private invitationModal?: TemplateRef<any>;
+  /**
+   * The ngb modal reference to invitation modal.
+   */
   invitationModalRef?: NgbModalRef;
+  /**
+   * The ngb modal reference to waiting modal content.
+   */
   waitingModalRef?: NgbModalRef;
   @ViewChild('waitingModal', { static: true }) waitingModal?: TemplateRef<any>;
 
@@ -57,16 +69,22 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Sends a message to the other user.
+   */
   sendMessage() {
     if (this.messageInput.trim()) {
-      console.log(this.messageInput);
       this.chatSignalRService.sendMessage(this.chatParticipants.sender.id, this.chatParticipants.recipient.id, this.messageInput, this.chatParticipants.recipient.isConnected);
-      // this.chatService.newMessageReceived$.subscribe(message => this.messages.push(message));
       this.handleSentMessage({ senderId: this.chatParticipants.sender.id, message: this.messageInput, sendingTime: new Date() })
       this.messageInput = "";
     }
   }
 
+  /**
+   * Checks if the message was sent by the current user.
+   * @param message The message received.
+   * @returns true if the message was sent by the current user, false otherwise.
+   */
   isMessageSentByCurrentUser(message: Message) {
     if (message.senderId === this.chatParticipants.sender.id) {
       return true;
@@ -74,20 +92,36 @@ export class ChatComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  /**
+   * Handles the message that was sent by the current user and adds it to the messages array.
+   * @param message the sent message.
+   */
   private handleSentMessage(message: Message) {
     if (message.senderId === this.chatParticipants.sender.id) {
       this.messages.push(message);
     }
   }
 
+  /**
+   * Opens a popup window, informs the recipient user that the sender invites him to play.
+   * @param content the content of the popup window.
+   */
   openRequestPopup(content: TemplateRef<any>) {
     this.gameRequestService.invitationModalRef = this.modal.open(content);
   }
 
+  /**
+   * Opens a popup window of a waiting message, displayed to the sender.
+   * @param content the content of the popup window.
+   */
   openWaitingPopup(content: TemplateRef<any>) {
     this.gameRequestService.waitingModalRef = this.modal.open(content);
   }
 
+  /**
+   * Accepts the game request.
+   * @param modal the popup modal.
+   */
   acceptGameRequest(modal: NgbActiveModal) {
     this.gameRequestService.setGameRequest(false);
     this.gameRequestService.setRequestAccepted(true);
@@ -103,6 +137,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Sends a game request, navigates to checkers game component and add query parameters of the users and their turns.
+   */
   sendGameRequest() {
     this.gameRequestService.setGameRequest(true);
     // this.gameRequestService.setRequestAccepted(true);
@@ -115,6 +152,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.gameHubService.sendGameRequest(this.chatParticipants.recipient.id);
   }
 
+  /**
+   * Declines a game request.
+   */
   declineGameRequest() {
     this.gameRequestService.closeModals();
     this.gameRequestService.setGameRequest(false);
