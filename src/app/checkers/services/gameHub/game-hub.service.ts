@@ -107,9 +107,9 @@ export class GameHubService {
    * Registers a callback to be executed when a move is made. The callback receives the result of the move and the coordinates of the moved piece.
    * @param callback a function that receives the move result and the from/to coordinates of the moved piece.
    */
-  onMoveMade(callback: (moveResult: boolean, fromRow: number, fromColumn: number, toRow: number, toColumn: number) => void): void {
-    this.hubConnection.on('moveMade', (moveResult: boolean, fromRow: number, fromColumn: number, toRow: number, toColumn: number) => {
-      callback(moveResult, fromRow, fromColumn, toRow, toColumn);
+  onMoveMade(callback: (moveResult: boolean, fromRow: number, fromColumn: number, toRow: number, toColumn: number, canSwitchTurns: boolean) => void): void {
+    this.hubConnection.on('moveMade', (moveResult: boolean, fromRow: number, fromColumn: number, toRow: number, toColumn: number, canSwitchTurns: boolean) => {
+      callback(moveResult, fromRow, fromColumn, toRow, toColumn, canSwitchTurns);
     });
   }
 

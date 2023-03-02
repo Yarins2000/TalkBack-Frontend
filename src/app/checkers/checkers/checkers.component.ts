@@ -109,7 +109,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
       console.log("starting a game in " + this.gameGroupName + " group name");
     });
 
-    this.gameHubService.onMoveMade((moveResult: boolean, fromRow: number, fromColumn: number, toRow: number, toColumn: number) => {
+    this.gameHubService.onMoveMade((moveResult: boolean, fromRow: number, fromColumn: number, toRow: number, toColumn: number, canSwitchTurns: boolean) => {
       if (moveResult) {
         if (this.board[fromRow][fromColumn] === CheckerState.White)
           this.selectedPiece = this.getPiece(this.senderPieces, fromRow, fromColumn);
@@ -117,6 +117,10 @@ export class CheckersComponent implements OnInit, OnDestroy {
           this.selectedPiece = this.getPiece(this.recipientPieces, fromRow, fromColumn);
 
         this.makeMove(fromRow, fromColumn, toRow, toColumn);
+
+        if(canSwitchTurns)
+          this.switchTurn();
+
         if(this.isGameOver())
           alert("you won!");
       }
@@ -241,7 +245,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
         }
         this.board[middleRow][middleColumn] = CheckerState.Empty;
       }
-      this.switchTurn();
+      //this.switchTurn();
     }
   }
 
