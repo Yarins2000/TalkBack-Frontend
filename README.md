@@ -50,3 +50,6 @@ The app will run on http://localhost:4200/. The page will reload if you make edi
 * Angular - The frontend framework used
 * Ng-Bootstrap - UI Library for Angular
 * Font Awesome - Icons library
+
+### Backend Project
+<https://github.com/Yarins2000/TalkBack-Backend>
