@@ -35,3 +35,10 @@ export const selectUserByUsername = (username: string) => createSelector(
     return state.users.find(user => user.username === username)!;
   }
 );
+
+export const selectLoggedInUser = (username: string) => createSelector(
+  selectAppState,
+  state => {
+    return state.loggedInUsers.find(user => user.username === username);
+  }
+);
