@@ -4,9 +4,11 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-6">
 
-                <div class="card" id="chat">
-                    <div class="card-header d-flex justify-content-between align-items-center p-3">
-                        <h5 class="mb-0">Chat</h5>
+                <div class="card text-center" id="chat">
+                    <!--<div class="card-header d-flex justify-content-between align-items-center p-3">-->
+                    <div class="card-header">
+                        <!-- <h5 class="mb-0">Chat</h5> -->
+                        <h5 class="card-title">{{chatParticipants.recipient.username}}</h5>
                     </div>
                     <div class="card-body overflow-auto" style="position: relative; height: 600px">
 
@@ -14,11 +16,13 @@
                             <div
                                 [ngClass]="isMessageSentByCurrentUser(message) ? 'd-flex flex-row justify-content-end mb-4 pt-1' : 'd-flex flex-row justify-content-start' ">
                                 <div>
-                                    <p *ngIf="isMessageSentByCurrentUser(message); else otherUser" class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
+                                    <p *ngIf="isMessageSentByCurrentUser(message); else otherUser"
+                                        class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">
                                         {{message.message}}
                                     </p>
                                     <ng-template #otherUser>
-                                        <p class="d-flex flex-row justify-content-start bg-light">{{message.message}}</p>
+                                        <p class="d-flex flex-row justify-content-start bg-light">{{message.message}}
+                                        </p>
                                     </ng-template>
 
                                     <p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">
@@ -47,19 +51,19 @@
 
 <!-- Modal code -->
 <ng-template #invitationModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Invitation to play Checkers</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    Do you want to play Checkers with {{ chatParticipants.recipient.username }}?
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="declineGameRequest()">No</button>
-    <button type="button" class="btn btn-primary" (click)="acceptGameRequest(modal)">Yes</button>
-  </div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Invitation to play Checkers</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Do you want to play Checkers with {{ chatParticipants.recipient.username }}?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="declineGameRequest()">No</button>
+        <button type="button" class="btn btn-primary" (click)="acceptGameRequest(modal)">Yes</button>
+    </div>
 </ng-template>
 
 

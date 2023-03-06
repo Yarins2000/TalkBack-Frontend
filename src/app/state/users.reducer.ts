@@ -26,9 +26,9 @@ export const reducers = createReducer(
     }),
 
     on(usersActions.userLogout, (state, { loggedOutUser }) => {
-        const isUserLoggedIn = state.loggedInUsers.includes(loggedOutUser);
+        const isUserLoggedIn = state.loggedInUsers.find(user => user.id === loggedOutUser.id);
         if (isUserLoggedIn) {
-            return { ...state, loggedInUsers: state.loggedInUsers.filter((user) => user.username !== loggedOutUser.username) };
+            return { ...state, loggedInUsers: state.loggedInUsers.filter(user => user.id !== loggedOutUser.id) };
         }
         else
             return { ...state, loggedInUsers: state.loggedInUsers };

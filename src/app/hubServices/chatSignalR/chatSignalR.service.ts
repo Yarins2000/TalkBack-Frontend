@@ -11,7 +11,7 @@ export class ChatSignalRService {
   hubConnection!: SignalR.HubConnection;
 
   constructor(private chatService: ChatService, private tokenService: TokenService) {
-    if (tokenService.getItemFromSessionStorage("token") && (!this.hubConnection || this.hubConnection.state === SignalR.HubConnectionState.Disconnected)) {
+    if (tokenService.getItemFromSessionStorage("token") && (!this.hubConnection || this.hubConnection.state !== SignalR.HubConnectionState.Connected)) {
       this.startConnection();
     }
   }
@@ -40,9 +40,10 @@ export class ChatSignalRService {
         console.log('error: ' + err.message);
       });
 
-    this.receiveMessage();
+    // this.receiveMessage();
     this.messageNotReceived();
   }
+
 
   /**
    * Sends a message to the recipient via signalr
@@ -51,20 +52,20 @@ export class ChatSignalRService {
    * @param message the message to send
    * @param isRecipientConnected determines whether the recipient is connected or not
    */
-  sendMessage(senderId: string, recipientId: string, message: string, isRecipientConnected: boolean) {
+  /*sendMessage(senderId: string, recipientId: string, message: string, isRecipientConnected: boolean) {
     this.hubConnection.invoke("SendMessageToUser", senderId, recipientId, message, isRecipientConnected)
       .catch(err => console.error(err));
-  }
+  }*/
 
   /**
    * Registers a method to be called when a message is received by the recipient.
    */
-  receiveMessage() {
+  /*receiveMessage() {
     this.hubConnection.on("receiveMessage", (senderId: string, message: string, date: string) => {
       const dateTime = new Date(date);
       this.chatService.newMessageArrived(senderId, message, dateTime);
     });
-  }
+  }*/
 
   /**
    * Registers a method to be called when the message has not been received.
@@ -73,6 +74,35 @@ export class ChatSignalRService {
     this.hubConnection.on("messageNotRecieved", (errorMessage: string) => {
       console.log(errorMessage);
     })
+  }
+  /////////////////////////////////////////////////////////////////////////////
+  
+  groupNameReceived(callback: (groupName: string) => void){
+    this.hubConnection.on("groupNameReceived", (groupName: string) =>{
+      callback(groupName);
+    });
+  }
+
+  joinGroup(senderId: string, recipientId: string) {
+    this.hubConnection.invoke("JoinGroup", senderId, recipientId);
+  }
+
+  leaveGroup(groupName: string) {
+    this.hubConnection.invoke("LeaveGroup", groupName);
+  }
+
+  receiveMessage(callback: (senderId: string, message: string, time: string) => void) {
+    this.hubConnection.on("receiveMessage", (senderId: string, message: string, time: string) => {
+      callback(senderId, message, time);
+    });
+  }
+
+  sendMessage(senderId: string, groupName: string, message: string) {
+    this.hubConnection.invoke("SendMessage", senderId, groupName, message);
+  }
+
+  unregisterReceiveMessage(){
+    this.hubConnection.off("receiveMessage");
   }
 
   /**

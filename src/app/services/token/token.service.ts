@@ -17,7 +17,7 @@ export class TokenService {
   isLoggedIn(): boolean {
     const token = this.getItemFromSessionStorage("token");
     return token !== null && !this.helper.isTokenExpired(token);
-  }
+  } 
 
   /**
    * Gets a token from session storage

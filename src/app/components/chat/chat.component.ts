@@ -20,7 +20,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   messageInput: string = "";
   messages: Message[] = [];
 
-  private subscription!: Subscription;
+  private groupName: string = "";
+
+  private sharedDataServiceSub!: Subscription;
+  private chatServiceSub!: Subscription;
+  private gameRequestSub!: Subscription;
 
   /**
    * The current chat participents.
@@ -47,21 +51,34 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(private chatService: ChatService, private chatSignalRService: ChatSignalRService, private router: Router,
     private chatSharedDataService: ChatSharedDataService, private gameHubService: GameHubService, private modal: NgbModal,
-    private gameRequestService: GameRequestService) { }
-
-  ngOnInit(): void {
-    this.subscription = this.chatSharedDataService.users$.subscribe(chatParticipents => {
+    private gameRequestService: GameRequestService) {
+    this.sharedDataServiceSub = this.chatSharedDataService.users$.subscribe(chatParticipents => {
       this.chatParticipants = chatParticipents;
     });
-    this.chatService.newMessageReceived$.subscribe(message => {
-      this.messages.push(message);
-      // this.handleSentMessage(message);
+  }
+
+  ngOnInit(): void {
+    this.messages = [];
+
+    this.chatSignalRService.joinGroup(this.chatParticipants.sender.id, this.chatParticipants.recipient.id);
+    this.chatSignalRService.groupNameReceived((groupName: string) => {
+      this.groupName = groupName;
     })
+
+    this.chatSignalRService.receiveMessage((senderId: string, message: string, time: string) => {
+      this.chatService.newMessageArrived(senderId, message, new Date(time));
+    });
+
+    this.chatServiceSub = this.chatService.newMessageReceived$.subscribe(message => {
+      this.messages.push(message);
+    });
+
     this.gameHubService.onGameRequestReceived(() => {
       this.openRequestPopup(this.invitationModal!);
     });
 
-    this.gameRequestService.gameRequestSent$.subscribe(value => {
+    //maybe unsubscribe this subscription
+    this.gameRequestSub = this.gameRequestService.gameRequestSent$.subscribe(value => {
       if (value)
         this.openWaitingPopup(this.waitingModal!);
       else
@@ -74,8 +91,7 @@ export class ChatComponent implements OnInit, OnDestroy {
    */
   sendMessage() {
     if (this.messageInput.trim()) {
-      this.chatSignalRService.sendMessage(this.chatParticipants.sender.id, this.chatParticipants.recipient.id, this.messageInput, this.chatParticipants.recipient.isConnected);
-      this.handleSentMessage({ senderId: this.chatParticipants.sender.id, message: this.messageInput, sendingTime: new Date() })
+      this.chatSignalRService.sendMessage(this.chatParticipants.sender.id, this.groupName, this.messageInput);
       this.messageInput = "";
     }
   }
@@ -86,9 +102,8 @@ export class ChatComponent implements OnInit, OnDestroy {
    * @returns true if the message was sent by the current user, false otherwise.
    */
   isMessageSentByCurrentUser(message: Message) {
-    if (message.senderId === this.chatParticipants.sender.id) {
+    if (message.senderId === this.chatParticipants.sender.id)
       return true;
-    }
     return false;
   }
 
@@ -96,11 +111,12 @@ export class ChatComponent implements OnInit, OnDestroy {
    * Handles the message that was sent by the current user and adds it to the messages array.
    * @param message the sent message.
    */
-  private handleSentMessage(message: Message) {
-    if (message.senderId === this.chatParticipants.sender.id) {
+  /*private handleSentMessage(message: Message) {
+    if (message.senderId !== this.chatParticipants.sender.id) {
       this.messages.push(message);
     }
-  }
+    this.messages.push(message);
+  }*/
 
   /**
    * Opens a popup window, informs the recipient user that the sender invites him to play.
@@ -162,6 +178,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.sharedDataServiceSub.unsubscribe();
+    this.chatServiceSub.unsubscribe();
+    this.gameRequestSub.unsubscribe();
+    this.chatSignalRService.unregisterReceiveMessage();
+    this.chatSignalRService.leaveGroup(this.groupName);
   }
 }

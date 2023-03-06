@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -16,9 +16,9 @@ import * as UsersActions from '../../state/users.actions';
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent implements OnInit, OnDestroy {
   loginForm: LoginRequest = new LoginRequest('', '', false);
-  subscription!: Subscription;
+  userSelectorSubscription!: Subscription;
   /**
    * A property that indicates wether there is an error or not. If there is, then insert the error into showErrorMessage[1] .
    */
@@ -38,9 +38,10 @@ export class SignInComponent implements OnInit {
    */
   submitLogin() {
     this.showErrorMessage = [false, ''];
+    console.log("submit form called");
 
     const loggedInUser = this.store.pipe(select(UsersSelectors.selectLoggedInUser(this.loginForm.username)));
-    loggedInUser.subscribe(user => {
+    this.userSelectorSubscription = loggedInUser.subscribe(user => {
       if (user) {
         this.showErrorMessage = [true, 'User is already logged in'];
         return;
@@ -58,6 +59,9 @@ export class SignInComponent implements OnInit {
         });
       }
     });
+  }
 
+  ngOnDestroy(): void {
+    this.userSelectorSubscription.unsubscribe();
   }
 }

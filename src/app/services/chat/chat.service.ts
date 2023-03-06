@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Message } from 'src/app/models/message.model';
 
 @Injectable({
@@ -9,7 +9,7 @@ export class ChatService {
   /**
    * @property newMessageReceived - a {@link BehaviorSubject} of {@link Message} that contains the latest message received.
    */
-  private newMessageReceived = new BehaviorSubject<Message>({} as Message);
+  private newMessageReceived = new Subject<Message>();
 
   constructor() { }
 
