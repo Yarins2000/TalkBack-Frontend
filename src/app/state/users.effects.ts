@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import * as UsersActions from './users.actions';
 import { of } from 'rxjs';
-import { ContactsService } from '../services/contacts/contacts.service';
+import { ContactsService } from '../contacts/services/contacts/contacts.service';
 
 @Injectable()
 export class UsersEffects {

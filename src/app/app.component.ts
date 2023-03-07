@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ContactsSignalRService } from './hubServices/contactsSignalR/contactsSignalR.service';
+import { ContactsSignalRService } from './contacts/services/contactsSignalR/contactsSignalR.service';
 
 @Component({
   selector: 'app-root',

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GameRequestService } from 'src/app/services/game-request/game-request.service';
+import { GameRequestService } from 'src/app/checkers/services/game-request/game-request.service';
 import { CheckerState } from '../models/CheckerState.model';
 import { Piece } from '../models/piece.model';
 import { GameHubService } from '../services/gameHub/game-hub.service';
@@ -128,7 +128,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
 
     this.gameHubService.onInvalidMove(() => {
       alert("invalid move");
-    })
+    });
   }
 
   /**
@@ -186,11 +186,6 @@ export class CheckersComponent implements OnInit, OnDestroy {
     else
       return false;
   }
-
-  
-  /*isSquareEnabled(row: number, column: number) {
-    return (row + column) % 2 === 1;
-  }*/
 
   /**
    * Checks if the square at position [toRo, toColumn] is empty and can be moved to. If so, invokes the makeMove hub's method.

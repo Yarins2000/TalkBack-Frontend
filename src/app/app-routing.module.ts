@@ -1,19 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CheckersComponent } from './checkers/checkers/checkers.component';
-import { ChatComponent } from './components/chat/chat.component';
-import { ContactsComponent } from './components/contacts/contacts.component';
-import { SignInComponent } from './components/sign-in/sign-in.component';
-import { SignUpComponent } from './components/sign-up/sign-up.component';
-import { AuthenticateGuard } from './guards/authenticate.guard';
+import { SignInComponent } from './auth/components/sign-in/sign-in.component';
 
 const routes: Routes = [
-  {path: '', component: SignInComponent},
-  {path: 'signin', component:SignInComponent},
-  {path: 'signup', component:SignUpComponent},
-  {path: 'contacts', canActivate:[AuthenticateGuard], component:ContactsComponent},
-  {path: 'chat', canActivate:[AuthenticateGuard], component:ChatComponent},
-  {path: 'checkers', canActivate:[AuthenticateGuard], component:CheckersComponent}
+  { path: '', component: SignInComponent },
+  { path: 'chat', loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule) },
+  { path: 'checkers', loadChildren: () => import('./checkers/checkers.module').then(m => m.CheckersModule) },
 ];
 
 @NgModule({
