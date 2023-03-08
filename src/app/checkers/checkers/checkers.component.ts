@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameRequestService } from 'src/app/checkers/services/game-request/game-request.service';
+import { ToastService } from 'src/app/toast/toast.service';
 import { CheckerState } from '../models/CheckerState.model';
 import { Piece } from '../models/piece.model';
 import { GameHubService } from '../services/gameHub/game-hub.service';
@@ -24,7 +25,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
   recipientPieces: Piece[] = [];
 
   constructor(private gameRequestService: GameRequestService, private router: Router, private route: ActivatedRoute,
-    private gameHubService: GameHubService) { }
+    private gameHubService: GameHubService, private toastService: ToastService) { }
 
   ngOnInit() {
     this.initializeBoard();
@@ -127,7 +128,7 @@ export class CheckersComponent implements OnInit, OnDestroy {
     });
 
     this.gameHubService.onInvalidMove(() => {
-      alert("invalid move");
+      this.toastService.show("Inavlid move", { classname: 'bg-danger text-light', delay: 1500 });
     });
   }
 
@@ -305,5 +306,6 @@ export class CheckersComponent implements OnInit, OnDestroy {
     this.gameRequestService.setGameRequest(false);
     this.gameRequestService.setRequestAccepted(false);
     this.gameHubService.leaveGroup(this.gameGroupName);
+    this.toastService.clear();
   }
 }
