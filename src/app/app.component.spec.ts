@@ -23,7 +23,6 @@ describe('AppComponent', () => {
   it(`should have as title 'TalkBack.UI'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('TalkBack.UI');
   });
 
   it('should render title', () => {

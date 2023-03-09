@@ -1,0 +1,21 @@
+section {
+    background: #c7def8;
+    color: #333;
+}
+
+.card-body {
+    background-color: #f8f8f8;
+}
+
+input {
+    border-color: #AAA;
+}
+
+input:focus {
+    border-color: #4A90E2;
+}
+
+button {
+    background: #4A90E2;
+    color: #FFF;
+}

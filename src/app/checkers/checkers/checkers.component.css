@@ -1,6 +1,8 @@
 .board-container {
-    width: 800px;
-    height: 800px;
+    height: 100%;
+    width: 100%;
+    max-width: 800px;
+    max-height: 800px;
     display: flex;
     flex-wrap: wrap;
     margin: auto;

@@ -2,7 +2,7 @@
     <div class="container py-5">
 
         <div class="row d-flex justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-6">
+            <div id="chat-whole" class="col-md-10 col-lg-8 col-xl-6">
 
                 <div class="card text-center" id="chat">
                     <!--<div class="card-header d-flex justify-content-between align-items-center p-3">-->
@@ -38,16 +38,14 @@
                         <a class="ms-3 text-muted pointer" (click)="sendMessage()"><i class="fas fa-paper-plane"></i>
                         </a>
                     </div>
+                    <button class="btn btn-primary play-btn" (click)="sendGameRequest()">
+                        <i class="fas fa-gamepad"></i> Play Game
+                    </button>
                 </div>
-
             </div>
         </div>
     </div>
 </section>
-
-<!-- Trigger button for the modal -->
-<!-- <button class="btn btn-primary" (click)="open(content)">Play Game</button> -->
-<button class="btn btn-primary" (click)="sendGameRequest()">Play Game</button>
 
 <!-- Modal code -->
 <ng-template #invitationModal let-modal>

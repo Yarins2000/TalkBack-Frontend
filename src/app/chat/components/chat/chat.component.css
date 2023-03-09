@@ -15,24 +15,68 @@
   background: #eee;
 }
 
-#chat {
-  height: 100%;
-}
-
-@media (max-width: 576px) {
-  #chat .card-body {
-    height: 70%;
+@media only screen and (min-width: 768px) {
+  .container {
+    height: 80vh;
   }
 }
 
-@media (min-width: 577px) and (max-width: 992px) {
-  #chat .card-body {
-    height: 80%;
+@media only screen and (max-width: 768px) {
+  .container {
+    height: 500px;
   }
 }
 
-@media (min-width: 993px) {
-  #chat .card-body {
-    height: 90%;
-  }
+section {
+  background-color: #f8f9fa;
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  height: 90vh;
+}
+
+.card-header {
+  background-color: #4A90E2;
+  color: #fff;
+  font-weight: bold;
+}
+
+.card-body {
+  height: 400px;
+}
+
+.card-footer {
+  background-color: #f8f9fa;
+}
+
+.form-control {
+  border-radius: 20px;
+  border-color: #4A90E2;
+}
+
+.btn-primary {
+  background-color: #4A90E2;
+  border-color: #4A90E2;
+}
+
+.btn-primary:hover {
+  background-color: #366DB2;
+  border-color: #366DB2;
+}
+
+.play-btn {
+  width: 30%;
+  background-color: #4A90E2;
+  color: #fff;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  margin: 15px auto;
+  transition: all 0.3s ease-in-out;
+}
+
+.play-btn:hover {
+  background-color: #3C74BA;
 }
