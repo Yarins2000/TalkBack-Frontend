@@ -10,7 +10,6 @@ import { GameHubService } from 'src/app/checkers/services/gameHub/game-hub.servi
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { GameRequestService } from 'src/app/checkers/services/game-request/game-request.service';
-import { NotificationService } from 'src/app/services/notification/notification.service';
 
 @Component({
   selector: 'app-chat',
@@ -53,7 +52,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(private chatService: ChatService, private chatSignalRService: ChatSignalRService, private router: Router,
     private chatSharedDataService: ChatSharedDataService, private gameHubService: GameHubService, private modal: NgbModal,
-    private gameRequestService: GameRequestService, private notificationService: NotificationService) {
+    private gameRequestService: GameRequestService) {
     this.sharedDataServiceSub = this.chatSharedDataService.users$.subscribe(chatParticipents => {
       this.chatParticipants = chatParticipents;
     });

@@ -13,7 +13,6 @@ import { TokenService } from 'src/app/services/token/token.service';
 import { AppState } from 'src/app/state/app.state';
 import * as UsersSelectors from 'src/app/state/users.selectors';
 import * as UsersActions from '../../../state/users.actions';
-import { NotificationService } from 'src/app/services/notification/notification.service';
 import { ToastService } from 'src/app/toast/toast.service';
 
 @Component({
@@ -28,8 +27,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   constructor(private contactsSignalRService: ContactsSignalRService, private accountService: AccountService, private router: Router,
     private store: Store<AppState>, private chatSharedDataService: ChatSharedDataService, private tokenService: TokenService,
-    private chatSignalRService: ChatSignalRService, private gameHubService: GameHubService, private notificationService: NotificationService,
-    private toastservice: ToastService) {
+    private chatSignalRService: ChatSignalRService, private gameHubService: GameHubService, private toastservice: ToastService) {
 
     this.users$ = this.store.pipe(select(UsersSelectors.usersSelector));
   }
@@ -95,7 +93,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
       .subscribe(user => currentUser = user);
 
     this.chatSharedDataService.updateUsers(currentUser, recipient);
-    this.notificationService.setNotification(false);
     this.router.navigate(['/chat'],);
   }
 
