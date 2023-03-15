@@ -46,6 +46,8 @@ To run the app in the development mode, use the following command:
 `ng serve`
 The app will run on http://localhost:4200/. The page will reload if you make edits. You will also see any lint errors in the console.
 
+This app uses real time communication, hence after running, open at least 2 tabs/browsers to use the app.
+
 ### Built With
 * Angular - The frontend framework used
 * Ng-Bootstrap - UI Library for Angular
