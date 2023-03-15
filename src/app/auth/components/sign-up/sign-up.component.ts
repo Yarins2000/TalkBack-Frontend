@@ -40,7 +40,7 @@ export class SignUpComponent implements OnDestroy {
   }
 
   showSuccessToast() {
-    this.toastService.show("You've got registration successfully", { classname: 'bg-success text-light', delay: 2000 });
+    this.toastService.show("You've registered successfully", { classname: 'bg-success text-light', delay: 2000 });
   }
 
   ngOnDestroy(): void {

@@ -29,4 +29,8 @@ export class ChatService {
   newMessageArrived(senderId: string, message: string, sendingTime: Date){
     this.newMessageReceived.next(new Message(senderId, message, sendingTime));
   }
+
+  convertToMessage(message: { senderId: string, messageContent: string, timeSent: string }){
+    return new Message(message.senderId, message.messageContent, new Date(message.timeSent));
+  }
 }

@@ -10,6 +10,7 @@ import { GameHubService } from 'src/app/checkers/services/gameHub/game-hub.servi
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { GameRequestService } from 'src/app/checkers/services/game-request/game-request.service';
+import { NotificationService } from 'src/app/services/notification/notification.service';
 
 @Component({
   selector: 'app-chat',
@@ -21,6 +22,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
 
   private groupName: string = "";
+  private isFirstVisit = false;
 
   private sharedDataServiceSub!: Subscription;
   private chatServiceSub!: Subscription;
@@ -51,7 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(private chatService: ChatService, private chatSignalRService: ChatSignalRService, private router: Router,
     private chatSharedDataService: ChatSharedDataService, private gameHubService: GameHubService, private modal: NgbModal,
-    private gameRequestService: GameRequestService) {
+    private gameRequestService: GameRequestService, private notificationService: NotificationService) {
     this.sharedDataServiceSub = this.chatSharedDataService.users$.subscribe(chatParticipents => {
       this.chatParticipants = chatParticipents;
     });
@@ -63,7 +65,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSignalRService.joinGroup(this.chatParticipants.sender.id, this.chatParticipants.recipient.id);
     this.chatSignalRService.groupNameReceived((groupName: string) => {
       this.groupName = groupName;
-    })
+    });
+
+    this.chatSignalRService.receiveAllMessages((messages: { senderId: string, messageContent: string, timeSent: string }[]) => {
+      if(!this.isFirstVisit){
+        messages.forEach(m => this.messages.push(this.chatService.convertToMessage(m)));
+        this.isFirstVisit = true;
+      }
+    });
 
     this.chatSignalRService.receiveMessage((senderId: string, message: string, time: string) => {
       this.chatService.newMessageArrived(senderId, message, new Date(time));
@@ -178,6 +187,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.isFirstVisit = false;
     this.sharedDataServiceSub.unsubscribe();
     this.chatServiceSub.unsubscribe();
     this.gameRequestSub.unsubscribe();

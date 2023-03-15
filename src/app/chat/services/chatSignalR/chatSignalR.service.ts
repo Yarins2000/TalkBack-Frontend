@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as SignalR from '@microsoft/signalr';
 import { TokenService } from 'src/app/services/token/token.service';
 import { environment } from '../../../environments/environment';
+import { Message } from '../../models/message.model';
 import { ChatService } from '../chat/chat.service';
 
 @Injectable({
@@ -52,9 +53,9 @@ export class ChatSignalRService {
     })
   }
   /////////////////////////////////////////////////////////////////////////////
-  
-  groupNameReceived(callback: (groupName: string) => void){
-    this.hubConnection.on("groupNameReceived", (groupName: string) =>{
+
+  groupNameReceived(callback: (groupName: string) => void) {
+    this.hubConnection.on("groupNameReceived", (groupName: string) => {
       callback(groupName);
     });
   }
@@ -73,12 +74,26 @@ export class ChatSignalRService {
     });
   }
 
+  receiveAllMessages(callback: (messages: { senderId: string, messageContent: string, timeSent: string }[]) => void) {
+    this.hubConnection.on("receiveAllMessages", (messages: { senderId: string, messageContent: string, timeSent: string }[]) => {
+      callback(messages);
+    })
+  }
+
+  notifyUser(callback: () => void){
+    this.hubConnection.on("notifyUser", () => callback());
+  }
+
   sendMessage(senderId: string, groupName: string, message: string) {
     this.hubConnection.invoke("SendMessage", senderId, groupName, message);
   }
 
-  unregisterReceiveMessage(){
+  unregisterReceiveMessage() {
     this.hubConnection.off("receiveMessage");
+  }
+
+  unregisterNotifyUser(){
+    this.hubConnection.off("notifyUser");
   }
 
   /**

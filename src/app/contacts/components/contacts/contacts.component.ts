@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -13,20 +13,23 @@ import { TokenService } from 'src/app/services/token/token.service';
 import { AppState } from 'src/app/state/app.state';
 import * as UsersSelectors from 'src/app/state/users.selectors';
 import * as UsersActions from '../../../state/users.actions';
+import { NotificationService } from 'src/app/services/notification/notification.service';
+import { ToastService } from 'src/app/toast/toast.service';
 
 @Component({
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
   styleUrls: ['./contacts.component.css']
 })
-export class ContactsComponent implements OnInit {
+export class ContactsComponent implements OnInit, OnDestroy {
   currentUsername: string = "";
   selectedUser?: User;
   users$: Observable<User[]>;
 
-  constructor(private contactsSignalRService: ContactsSignalRService, private accountService: AccountService, private router: Router, 
+  constructor(private contactsSignalRService: ContactsSignalRService, private accountService: AccountService, private router: Router,
     private store: Store<AppState>, private chatSharedDataService: ChatSharedDataService, private tokenService: TokenService,
-    private chatSignalRService: ChatSignalRService, private gameHubService: GameHubService) {
+    private chatSignalRService: ChatSignalRService, private gameHubService: GameHubService, private notificationService: NotificationService,
+    private toastservice: ToastService) {
 
     this.users$ = this.store.pipe(select(UsersSelectors.usersSelector));
   }
@@ -34,6 +37,10 @@ export class ContactsComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(UsersActions.loadUsers());
     this.currentUsername = this.tokenService.getUsernameFromToken("token");
+
+    this.chatSignalRService.notifyUser(() => {
+      this.toastservice.show("You've got new message", {classname: 'bg-primary text-light', delay: 7000});
+    });
   }
 
   /**
@@ -67,14 +74,14 @@ export class ContactsComponent implements OnInit {
   /**
    * Returns the logged in users
    */
-  get loggedInUsers(): Observable<User[]>{
+  get loggedInUsers(): Observable<User[]> {
     return this.users$.pipe(map(users => users.filter(user => user.isConnected && user.username !== this.currentUsername)));
   }
 
   /**
    * Returns the current user by his username.
    */
-  get currentUser(): Observable<User>{
+  get currentUser(): Observable<User> {
     return this.store.select(UsersSelectors.selectUserByUsername(this.currentUsername));
   }
 
@@ -82,12 +89,17 @@ export class ContactsComponent implements OnInit {
    * Navigates to chat component and sends the current user and the recipient via {@link ChatSharedDataService}.
    * @param recipient the recipient user
    */
-  navigateToChat(recipient: User){
-    let currentUser! : User;
+  navigateToChat(recipient: User) {
+    let currentUser!: User;
     this.store.select(UsersSelectors.selectUserByUsername(this.currentUsername))
-              .subscribe(user => currentUser = user);
+      .subscribe(user => currentUser = user);
 
     this.chatSharedDataService.updateUsers(currentUser, recipient);
-    this.router.navigate(['/chat'], );
+    this.notificationService.setNotification(false);
+    this.router.navigate(['/chat'],);
+  }
+
+  ngOnDestroy(): void {
+    this.chatSignalRService.unregisterNotifyUser();
   }
 }
